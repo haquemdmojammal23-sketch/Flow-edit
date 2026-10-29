@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowEdit - Smart Video & Photo Editor</title>
+    <title>FlowEdit - Home</title>
     <style>
         * {
             margin: 0;
@@ -11,219 +11,358 @@
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
+
         body {
-            background-color: #0b0f19;
-            color: #ffffff;
+            background-color: #f8fafc;
+            color: #0f172a;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
         }
-        .phone-container {
+
+        .app-container {
             width: 100%;
-            max-width: 400px;
-            height: 100vh;
-            max-height: 844px;
-            background-color: #111827;
+            max-width: 420px;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #1d4ed8 0%, #3b82f6 18%, #ffffff 38%);
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
+            justify-content: space-between;
             position: relative;
-            box-shadow: 0 0 25px rgba(0,0,0,0.6);
-            border-radius: 0px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding-bottom: 65px;
         }
-        @media (min-width: 401px) {
-            .phone-container {
-                border-radius: 40px;
-                border: 8px solid #1f2937;
-            }
-        }
-        .header {
-            padding: 20px;
+
+        /* Top Header */
+        .top-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #111827;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            padding: 16px 20px;
+            color: #ffffff;
         }
-        .logo-area {
+
+        .top-header .brand-title {
+            font-size: 15px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .top-header .search-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
         }
-        .logo-icon {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
+
+        /* Banner Text */
+        .banner-text {
+            padding: 0 20px 15px 20px;
+            color: #ffffff;
+        }
+
+        .banner-text .sub {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-bottom: 2px;
+        }
+
+        .banner-text .main {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Hero Action Cards */
+        .hero-cards {
+            display: flex;
+            gap: 12px;
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+
+        .hero-card {
+            flex: 1;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #0f172a;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .hero-card .icon-plus {
+            width: 36px;
+            height: 36px;
+            background: #000000;
+            color: #ffffff;
             border-radius: 10px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            font-weight: bold;
+            justify-content: center;
             font-size: 20px;
-            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
+            font-weight: bold;
+            margin-bottom: 10px;
         }
-        .header-icons {
+
+        .hero-card .icon-photo {
+            width: 36px;
+            height: 36px;
+            background: #000000;
+            color: #ffffff;
+            border-radius: 10px;
             display: flex;
-            gap: 15px;
-            color: #94a3b8;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 10px;
         }
-        .header-icons svg {
-            width: 22px;
-            height: 22px;
-            cursor: pointer;
-        }
-        .section-title {
-            padding: 0 20px;
-            font-size: 13px;
-            color: #94a3b8;
-            margin-top: 20px;
-            margin-bottom: 12px;
+
+        .hero-card .card-title {
+            font-size: 15px;
             font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
         }
-        .creation-grid {
+
+        .hero-card .badge {
+            position: absolute;
+            top: -8px;
+            right: 12px;
+            background: #f1f5f9;
+            color: #334155;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        /* Recent Drafts Horizontal Scroll */
+        .recent-scroll {
+            display: flex;
+            gap: 10px;
             padding: 0 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+            scrollbar-width: none;
         }
-        .create-card {
-            padding: 22px;
-            border-radius: 18px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+
+        .recent-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .draft-thumb {
+            min-width: 65px;
+            height: 65px;
+            border-radius: 12px;
+            background: #cbd5e1;
+            background-size: cover;
+            background-position: center;
             position: relative;
-            overflow: hidden;
+            flex-shrink: 0;
         }
-        .create-card:active {
-            transform: scale(0.98);
+
+        .draft-thumb .tag {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            font-size: 9px;
+            color: #ffffff;
+            background: rgba(0,0,0,0.5);
+            padding: 1px 4px;
+            border-radius: 4px;
         }
-        .video-card {
-            background: linear-gradient(135deg, #f43f5e, #e11d48);
-            box-shadow: 0 8px 20px rgba(244, 63, 94, 0.3);
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px 10px;
+            padding: 0 20px;
+            margin-bottom: 20px;
         }
-        .photo-card {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-        }
-        .create-card h3 {
-            font-size: 19px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
-        .mini-timeline {
-            margin-top: 18px;
+
+        .feature-item {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            text-align: center;
             gap: 8px;
-        }
-        .mini-track {
-            height: 6px;
-            background: rgba(255,255,255,0.25);
-            border-radius: 3px;
-            position: relative;
-            overflow: hidden;
-        }
-        .mini-wave {
-            width: 45%;
-            height: 100%;
-            background: white;
-            border-radius: 3px;
-        }
-        .recent-section {
-            padding: 0 20px;
-            margin-top: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding-bottom: 40px;
-        }
-        .project-card {
-            background: #1f2937;
-            padding: 16px;
-            border-radius: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
             cursor: pointer;
-            transition: background 0.2s;
         }
-        .project-card:hover {
-            background: #374151;
-        }
-        .project-header {
+
+        .feature-icon {
+            width: 44px;
+            height: 44px;
             display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            font-weight: 600;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #1e293b;
         }
-        .project-info {
+
+        .feature-label {
             font-size: 12px;
-            color: #94a3b8;
+            color: #334155;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            font-size: 10px;
+            color: #64748b;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .nav-item .nav-icon {
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
-    <div class="phone-container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo-area">
-                <div class="logo-icon">F</div>
-                FlowEdit
-            </div>
-            <div class="header-icons">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
-            </div>
+
+    <div class="app-container">
+        <!-- Top Header -->
+        <div class="top-header">
+            <span class="brand-title">Import</span>
+            <div class="search-icon">🔍</div>
         </div>
 
-        <!-- New Creation -->
-        <div class="section-title">NEW CREATION</div>
-        <div class="creation-grid">
-            <!-- New Video Project with Link to editor.html -->
-            <a href="editor.html" class="create-card video-card" style="text-decoration: none; color: white; display: block;">
-                <h3>NEW VIDEO PROJECT</h3>
-                <div class="mini-timeline">
-                    <div class="mini-track">
-                        <div class="mini-wave"></div>
-                    </div>
-                    <div class="mini-track">
-                        <div class="mini-wave" style="width: 65%;"></div>
-                    </div>
-                </div>
+        <!-- Banner Text -->
+        <div class="banner-text">
+            <div class="sub">Video create</div>
+            <div class="main">Get started ❯</div>
+        </div>
+
+        <!-- Main Action Cards -->
+        <div class="hero-cards">
+            <!-- New Video Button linked to editor.html -->
+            <a href="editor.html" class="hero-card">
+                <div class="icon-plus">+</div>
+                <div class="card-title">New video</div>
             </a>
-            
-            <div class="create-card photo-card">
-                <h3>NEW PHOTO PROJECT</h3>
-                <div style="font-size: 12px; opacity: 0.85; margin-top: 6px; font-weight: 400;">Advanced Photo Editor & Filters</div>
+
+            <!-- Photo Edit Button -->
+            <div class="hero-card">
+                <span class="badge">FlowEdit 2.1</span>
+                <div class="icon-photo">🖼️</div>
+                <div class="card-title">Edit photo</div>
             </div>
         </div>
 
-        <!-- Recent Projects -->
-        <div class="section-title">RECENT PROJECTS</div>
-        <div class="recent-section">
-            <div class="project-card">
-                <div class="project-header">
-                    <span>DHAKA VLOG - DRAFT 1</span>
-                    <span style="color: #94a3b8; font-size: 12px; font-weight: 400;">2 hours ago</span>
-                </div>
-                <div class="project-info">1080p • 60fps • 02:45</div>
+        <!-- Recent Projects Scroll -->
+        <div class="recent-scroll">
+            <div class="draft-thumb" style="background-image: url('https://picsum.photos/200/200?random=1');"><span class="tag">✂️ 1028-01</span></div>
+            <div class="draft-thumb" style="background-image: url('https://picsum.photos/200/200?random=2');"><span class="tag">✂️ 1019-03</span></div>
+            <div class="draft-thumb" style="background-image: url('https://picsum.photos/200/200?random=3');"><span class="tag">✂️ 1020-02</span></div>
+            <div class="draft-thumb" style="background-image: url('https://picsum.photos/200/200?random=4');"><span class="tag">✂️ 1020-04</span></div>
+        </div>
+
+        <!-- Features Grid Menu -->
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-label">AutoCut</div>
             </div>
-            <div class="project-card">
-                <div class="project-header">
-                    <span>CINEMATIC REEL EDIT</span>
-                    <span style="color: #94a3b8; font-size: 12px; font-weight: 400;">Yesterday</span>
-                </div>
-                <div class="project-info">4K • 30fps • 00:58</div>
+            <div class="feature-item">
+                <div class="feature-icon">✨</div>
+                <div class="feature-label">Retouch</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🤖</div>
+                <div class="feature-label">AI generator</div>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">🖼️</div>
+                <div class="feature-label">Photo tools</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📹</div>
+                <div class="feature-label">Shoot and record</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🪄</div>
+                <div class="feature-label">Auto enhance</div>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">🖼️</div>
+                <div class="feature-label">Cover maker</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">💬</div>
+                <div class="feature-label">Auto captions</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">👤</div>
+                <div class="feature-label">Remove background</div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <span class="nav-icon">✂️</span>
+                <span>Edit</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">📄</span>
+                <span>Templates</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🧪</span>
+                <span>AI Lab</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">📁</span>
+                <span>Projects</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🔔</span>
+                <span>Inbox</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span>Me</span>
             </div>
         </div>
     </div>
+
 </body>
 </html>
