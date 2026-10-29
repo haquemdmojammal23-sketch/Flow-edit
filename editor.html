@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowEdit - Pro CapCut Editor</title>
+    <title>FlowEdit - Pro Mobile Editor</title>
     <style>
         * {
             margin: 0;
@@ -74,7 +74,7 @@
             cursor: pointer;
         }
 
-        /* Video Preview Area with Live Text & Font Styles */
+        /* Video Preview Area with Guaranteed Live Text Layer */
         .preview-area {
             flex: 1;
             display: flex;
@@ -112,21 +112,21 @@
             font-weight: 600;
             cursor: pointer;
         }
-        /* Live Text Display on Video */
-        .live-text-layer {
+        
+        /* Live Text Layer on Video - Fixed Positioning */
+        #renderedTextOverlay {
             position: absolute;
-            bottom: 30px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             color: #ffffff;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
-            z-index: 10;
-            display: none;
+            z-index: 20;
             text-align: center;
-            padding: 6px 16px;
-            border-radius: 6px;
-            white-space: nowrap;
+            text-shadow: 2px 2px 6px #000;
+            pointer-events: none;
+            display: none;
         }
 
         /* Preview Control Bar */
@@ -267,22 +267,19 @@
             cursor: pointer;
             white-space: nowrap;
         }
-        .panel-btn.active-style {
-            background: #0ea5e9;
-            border-color: #38bdf8;
-        }
         .panel-slider {
             width: 100%;
             accent-color: #38bdf8;
         }
         .text-input-box {
             width: 100%;
-            padding: 6px 10px;
+            padding: 8px 12px;
             background: #0f172a;
-            border: 1px solid #334155;
+            border: 1px solid #38bdf8;
             color: white;
-            border-radius: 5px;
-            font-size: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
         }
 
         /* Bottom Toolbar (Fixed) */
@@ -333,7 +330,8 @@
             </div>
             <input type="file" id="videoUpload" accept="video/*" style="display: none;" onchange="loadVideo(event)">
             <video id="videoPlayer" controls style="display: none;"></video>
-            <div class="live-text-layer" id="liveTextLayer"></div>
+            <!-- Guaranteed Live Text Display Layer -->
+            <div id="renderedTextOverlay"></div>
         </div>
 
         <!-- Preview Control Bar -->
@@ -407,7 +405,7 @@
         const panelTitle = document.getElementById('panelTitle');
         const panelOptions = document.getElementById('panelOptions');
         const tracksContainer = document.getElementById('tracksContainer');
-        const liveTextLayer = document.getElementById('liveTextLayer');
+        const renderedTextOverlay = document.getElementById('renderedTextOverlay');
 
         function loadVideo(event) {
             const file = event.target.files[0];
@@ -459,7 +457,7 @@
                     </div>
                 `;
             } else if (toolType === 'volume') {
-                panelTitle.textContent = '🔊 Volume Control (1% - 500%) [Live No OK]';
+                panelTitle.textContent = '🔊 Volume Control (1% - 500%)';
                 panelOptions.innerHTML = `
                     <div style="display:flex; flex-direction:column; width:100%; gap:4px;">
                         <div style="display:flex; justify-content:space-between; font-size:10px; color:#38bdf8;">
@@ -488,19 +486,23 @@
                     </div>
                 `;
             } else if (toolType === 'text') {
-                panelTitle.textContent = '💬 Text, Lyrics & Font Styles (CapCut Style)';
+                panelTitle.textContent = '💬 Text & Keyboard Input (Live Preview)';
                 panelOptions.innerHTML = `
                     <div style="display:flex; flex-direction:column; gap:6px; width:100%;">
-                        <input type="text" class="text-input-box" id="textInputVal" placeholder="টেক্সট বা লিরিকস লিখুন..." oninput="updateLiveText(this.value)">
-                        <div style="font-size:10px; color:#38bdf8;">স্টাইলিশ ফন্ট ও কালার সিলেক্ট করুন:</div>
+                        <input type="text" class="text-input-box" id="mobileTextInput" placeholder="এখানে কিছু লিখুন..." autofocus oninput="updateLiveText(this.value)">
+                        <div style="font-size:10px; color:#38bdf8;">ফন্ট স্টাইল সিলেক্ট করুন:</div>
                         <div class="panel-row">
-                            <button class="panel-btn" onclick="setFontStyle('sans-serif', '#ffffff', 'none')">Classic White</button>
-                            <button class="panel-btn" onclick="setFontStyle('serif', '#facc15', '2px 2px #000')">Yellow Glow</button>
-                            <button class="panel-btn" onclick="setFontStyle('monospace', '#38bdf8', '0 0 10px #38bdf8')">Neon Blue</button>
-                            <button class="panel-btn" onclick="setFontStyle('cursive', '#f43f5e', '2px 2px 4px #000')">Arabic/Stylish</button>
+                            <button class="panel-btn" onclick="setFontStyle('#ffffff', 'none')">Classic</button>
+                            <button class="panel-btn" onclick="setFontStyle('#facc15', '2px 2px #000')">Yellow Glow</button>
+                            <button class="panel-btn" onclick="setFontStyle('#38bdf8', '0 0 10px #38bdf8')">Neon Blue</button>
                         </div>
                     </div>
                 `;
+                setTimeout(() => {
+                    const inputField = document.getElementById('mobileTextInput');
+                    if(inputField) inputField.focus();
+                }, 100);
+
             } else if (toolType === 'filter') {
                 panelTitle.textContent = '🎨 Color Filters';
                 panelOptions.innerHTML = `
@@ -508,7 +510,6 @@
                         <button class="panel-btn" onclick="applyFilter('none')">Normal</button>
                         <button class="panel-btn" onclick="applyFilter('grayscale(100%)')">B & W</button>
                         <button class="panel-btn" onclick="applyFilter('sepia(100%)')">Sepia</button>
-                        <button class="panel-btn" onclick="applyFilter('contrast(180%)')">Contrast</button>
                     </div>
                 `;
             } else if (toolType === 'delete') {
@@ -518,7 +519,8 @@
                     uploadOverlay.style.display = 'flex';
                     clipName.textContent = 'No Video Selected';
                     trackThumb.style.backgroundImage = 'none';
-                    liveTextLayer.style.display = 'none';
+                    renderedTextOverlay.style.display = 'none';
+                    renderedTextOverlay.textContent = '';
                     toolPanel.style.display = 'none';
                 }
             }
@@ -554,17 +556,16 @@
 
         function updateLiveText(txt) {
             if(txt.trim() !== '') {
-                liveTextLayer.textContent = txt;
-                liveTextLayer.style.display = 'block';
+                renderedTextOverlay.textContent = txt;
+                renderedTextOverlay.style.display = 'block';
             } else {
-                liveTextLayer.style.display = 'none';
+                renderedTextOverlay.style.display = 'none';
             }
         }
 
-        function setFontStyle(fontFamily, color, shadow) {
-            liveTextLayer.style.fontFamily = fontFamily;
-            liveTextLayer.style.color = color;
-            liveTextLayer.style.textShadow = shadow;
+        function setFontStyle(color, shadow) {
+            renderedTextOverlay.style.color = color;
+            renderedTextOverlay.style.textShadow = shadow;
             alert('ফন্ট স্টাইল পরিবর্তন করা হয়েছে!');
         }
     </script>
