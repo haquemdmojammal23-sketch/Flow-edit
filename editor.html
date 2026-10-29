@@ -78,12 +78,63 @@
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
         }
-        .timeline-area {
-            background: #111827;
-            padding: 15px 20px;
-            display: flex;
+        /* Dynamic Tool Panel */
+        .tool-panel {
+            background: #1e293b;
+            padding: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: none;
             flex-direction: column;
             gap: 10px;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .panel-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #38bdf8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .panel-close {
+            cursor: pointer;
+            font-size: 16px;
+            color: #94a3b8;
+        }
+        .panel-options {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .panel-btn {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+        .panel-btn:hover {
+            background: #475569;
+        }
+        .panel-btn.active {
+            background: #6366f1;
+        }
+
+        .timeline-area {
+            background: #111827;
+            padding: 12px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
         .time-info {
             font-size: 12px;
@@ -145,7 +196,7 @@
             cursor: pointer;
             transition: color 0.2s;
         }
-        .tool-item:hover {
+        .tool-item:hover, .tool-item.active {
             color: #38bdf8;
         }
         .tool-item span {
@@ -172,6 +223,17 @@
             <video id="videoPlayer" controls style="display: none;"></video>
         </div>
 
+        <!-- Dynamic Tool Settings Panel -->
+        <div class="tool-panel" id="toolPanel">
+            <div class="panel-title">
+                <span id="panelTitleText">Tool Settings</span>
+                <span class="panel-close" onclick="closeToolPanel()">✕</span>
+            </div>
+            <div class="panel-options" id="panelOptions">
+                <!-- Program options will load here dynamically -->
+            </div>
+        </div>
+
         <!-- Timeline Area -->
         <div class="timeline-area">
             <div class="time-info">
@@ -188,12 +250,12 @@
 
         <!-- Bottom Toolbar -->
         <div class="toolbar">
-            <div class="tool-item" onclick="alert('Split tool selected!')"><span>✂️</span>Split</div>
-            <div class="tool-item" onclick="alert('Speed control options!')"><span>⚡</span>Speed</div>
-            <div class="tool-item" onclick="alert('Color filters panel!')"><span>🎨</span>Filters</div>
-            <div class="tool-item" onclick="alert('Text overlay editor!')"><span>💬</span>Text</div>
-            <div class="tool-item" onclick="alert('Audio mixer & Extract audio!')"><span>🎵</span>Audio</div>
-            <div class="tool-item" onclick="alert('AI enhancement tools!')"><span>✨</span>AI Tools</div>
+            <div class="tool-item" onclick="openTool('split')"><span>✂️</span>Split</div>
+            <div class="tool-item" onclick="openTool('speed')"><span>⚡</span>Speed</div>
+            <div class="tool-item" onclick="openTool('filters')"><span>🎨</span>Filters</div>
+            <div class="tool-item" onclick="openTool('text')"><span>💬</span>Text</div>
+            <div class="tool-item" onclick="openTool('audio')"><span>🎵</span>Audio</div>
+            <div class="tool-item" onclick="openTool('ai')"><span>✨</span>AI Tools</div>
         </div>
     </div>
 
@@ -202,6 +264,9 @@
         const uploadOverlay = document.getElementById('uploadOverlay');
         const clipName = document.getElementById('clipName');
         const timeDisplay = document.getElementById('currentTime');
+        const toolPanel = document.getElementById('toolPanel');
+        const panelTitleText = document.getElementById('panelTitleText');
+        const panelOptions = document.getElementById('panelOptions');
 
         function loadVideo(event) {
             const file = event.target.files[0];
@@ -233,6 +298,70 @@
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Tool Programs Setup
+        function openTool(toolName) {
+            toolPanel.style.display = 'flex';
+            panelOptions.innerHTML = '';
+
+            if (toolName === 'split') {
+                panelTitleText.textContent = '✂️ Video Splitter Program';
+                panelOptions.innerHTML = `
+                    <button class="panel-btn" onclick="alert('Split at current playhead position executed!')">Split Clip</button>
+                    <button class="panel-btn" onclick="alert('Trim start point applied!')">Trim Start</button>
+                    <button class="panel-btn" onclick="alert('Trim end point applied!')">Trim End</button>
+                `;
+            } else if (toolName === 'speed') {
+                panelTitleText.textContent = '⚡ Speed Control Program';
+                panelOptions.innerHTML = `
+                    <button class="panel-btn" onclick="setSpeed(0.5)">0.5x (Slow)</button>
+                    <button class="panel-btn active" onclick="setSpeed(1.0)">1.0x (Normal)</button>
+                    <button class="panel-btn" onclick="setSpeed(1.5)">1.5x</button>
+                    <button class="panel-btn" onclick="setSpeed(2.0)">2.0x (Fast)</button>
+                `;
+            } else if (toolName === 'filters') {
+                panelTitleText.textContent = '🎨 Color Filters Program';
+                panelOptions.innerHTML = `
+                    <button class="panel-btn" onclick="applyFilter('none')">Normal</button>
+                    <button class="panel-btn" onclick="applyFilter('grayscale(100%)')">B & W</button>
+                    <button class="panel-btn" onclick="applyFilter('sepia(100%)')">Cinematic Sepia</button>
+                    <button class="panel-btn" onclick="applyFilter('contrast(150%)')">High Contrast</button>
+                `;
+            } else if (toolName === 'text') {
+                panelTitleText.textContent = '💬 Text Overlay Program';
+                panelOptions.innerHTML = `
+                    <button class="panel-btn" onclick="alert('Title text layer added!')">+ Add Title</button>
+                    <button class="panel-btn" onclick="alert('Subtitle template applied!')">+ Subtitle</button>
+                `;
+            } else if (toolName === 'audio') {
+                panelTitleText.textContent = '🎵 Audio & Extract Program';
+                panelOptions.innerHTML = `
+                    <button class="panel-btn" onclick="alert('Audio extracted from video successfully!')">Extract Audio</button>
+                    <button class="panel-btn" onclick="alert('Muted video track!')">Mute Audio</button>
+                    <button class="panel-btn" onclick="alert('Background music added!')">+ Add BGM</button>
+                `;
+            } else if (toolName === 'ai') {
+                panelTitleText.textContent = '✨ AI Enhancement Tools';
+                panelOptions.innerHTML = `
+                    <button class="panel-btn" onclick="alert('AI Auto Captions generated!')">Auto Captions</button>
+                    <button class="panel-btn" onclick="alert('AI Voice Enhancement active!')">Voice Enhance</button>
+                    <button class="panel-btn" onclick="alert('AI Background Removal active!')">BG Removal</button>
+                `;
+            }
+        }
+
+        function closeToolPanel() {
+            toolPanel.style.display = 'none';
+        }
+
+        function setSpeed(rate) {
+            videoPlayer.playbackRate = rate;
+            alert('Playback speed set to ' + rate + 'x');
+        }
+
+        function applyFilter(filterStyle) {
+            videoPlayer.style.filter = filterStyle;
         }
     </script>
 </body>
