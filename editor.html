@@ -99,6 +99,7 @@
             align-items: center;
             gap: 10px;
             border: 1px solid rgba(255,255,255,0.05);
+            overflow-x: auto;
         }
         .clip-box {
             background: #3b82f6;
@@ -110,7 +111,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 150px;
+            max-width: 180px;
         }
         .waveform {
             flex: 1;
@@ -119,9 +120,10 @@
             border-radius: 3px;
             position: relative;
             overflow: hidden;
+            min-width: 100px;
         }
         .waveform-inner {
-            width: 70%;
+            width: 100%;
             height: 100%;
             background: #38bdf8;
             border-radius: 3px;
@@ -141,6 +143,10 @@
             font-size: 11px;
             color: #94a3b8;
             cursor: pointer;
+            transition: color 0.2s;
+        }
+        .tool-item:hover {
+            color: #38bdf8;
         }
         .tool-item span {
             font-size: 16px;
@@ -153,7 +159,7 @@
         <div class="top-nav">
             <a href="index.html" class="back-btn">← Back</a>
             <div style="font-weight: 600; font-size: 15px;">FlowEdit Studio</div>
-            <div style="font-size: 13px; color: #38bdf8; cursor: pointer;" onclick="document.getElementById('videoUpload').click()">Upload</div>
+            <div style="font-size: 13px; color: #38bdf8; cursor: pointer;" onclick="document.getElementById('videoUpload').click()">+ Add Media</div>
         </div>
 
         <!-- Video Preview Area -->
@@ -172,7 +178,7 @@
                 <span id="currentTime">00:00 / 00:00</span>
                 <span style="color: #38bdf8;">⚡ Multi-Track Timeline</span>
             </div>
-            <div class="track">
+            <div class="track" id="timelineTrack">
                 <div class="clip-box" id="clipName">No Video Selected</div>
                 <div class="waveform">
                     <div class="waveform-inner"></div>
@@ -182,31 +188,51 @@
 
         <!-- Bottom Toolbar -->
         <div class="toolbar">
-            <div class="tool-item"><span>✂️</span>Split</div>
-            <div class="tool-item"><span>⚡</span>Speed</div>
-            <div class="tool-item"><span>🎨</span>Filters</div>
-            <div class="tool-item"><span>💬</span>Text</div>
-            <div class="tool-item"><span>🎵</span>Audio</div>
-            <div class="tool-item"><span>✨</span>AI Tools</div>
+            <div class="tool-item" onclick="alert('Split tool selected!')"><span>✂️</span>Split</div>
+            <div class="tool-item" onclick="alert('Speed control options!')"><span>⚡</span>Speed</div>
+            <div class="tool-item" onclick="alert('Color filters panel!')"><span>🎨</span>Filters</div>
+            <div class="tool-item" onclick="alert('Text overlay editor!')"><span>💬</span>Text</div>
+            <div class="tool-item" onclick="alert('Audio mixer & Extract audio!')"><span>🎵</span>Audio</div>
+            <div class="tool-item" onclick="alert('AI enhancement tools!')"><span>✨</span>AI Tools</div>
         </div>
     </div>
 
     <script>
+        const videoPlayer = document.getElementById('videoPlayer');
+        const uploadOverlay = document.getElementById('uploadOverlay');
+        const clipName = document.getElementById('clipName');
+        const timeDisplay = document.getElementById('currentTime');
+
         function loadVideo(event) {
             const file = event.target.files[0];
             if (file) {
-                const videoPlayer = document.getElementById('videoPlayer');
-                const uploadOverlay = document.getElementById('uploadOverlay');
-                const clipName = document.getElementById('clipName');
-
                 const videoURL = URL.createObjectURL(file);
                 videoPlayer.src = videoURL;
                 videoPlayer.style.display = 'block';
                 uploadOverlay.style.display = 'none';
                 clipName.textContent = file.name;
 
+                videoPlayer.onloadedmetadata = function() {
+                    const duration = formatTime(videoPlayer.duration);
+                    timeDisplay.textContent = `00:00 / ${duration}`;
+                };
+
                 videoPlayer.play();
             }
+        }
+
+        videoPlayer.ontimeupdate = function() {
+            if (!isNaN(videoPlayer.duration)) {
+                const current = formatTime(videoPlayer.currentTime);
+                const duration = formatTime(videoPlayer.duration);
+                timeDisplay.textContent = `${current} / ${duration}`;
+            }
+        };
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
     </script>
 </body>
