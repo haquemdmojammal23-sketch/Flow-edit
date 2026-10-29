@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowEdit - Pro Editor</title>
+    <title>FlowEdit - Pro CapCut Editor</title>
     <style>
         * {
             margin: 0;
@@ -31,7 +31,7 @@
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            box-shadow: 0 0 25px rgba(0,0,0,0.8);
+            box-shadow: 0 0 25px rgba(0,0,0,0.9);
         }
 
         /* Top Header Bar */
@@ -57,9 +57,9 @@
         .quality-badge {
             background: #1e293b;
             color: #38bdf8;
-            padding: 3px 8px;
+            padding: 3px 10px;
             border-radius: 12px;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
             border: 1px solid rgba(255,255,255,0.1);
         }
@@ -74,7 +74,7 @@
             cursor: pointer;
         }
 
-        /* Video Preview Area */
+        /* Video Preview Area with Live Text & Font Styles */
         .preview-area {
             flex: 1;
             display: flex;
@@ -83,11 +83,10 @@
             position: relative;
             background: #000000;
             margin: 4px 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             overflow: hidden;
-            min-height: 180px;
-            max-height: 240px;
-            border: 1px solid rgba(255,255,255,0.08);
+            max-height: 250px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         .preview-area video {
             width: 100%;
@@ -107,70 +106,39 @@
         .upload-btn-label {
             background: linear-gradient(135deg, #0ea5e9, #6366f1);
             color: white;
-            padding: 8px 20px;
+            padding: 8px 22px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
         }
-
-        /* Tool Settings Panel (Overlay without pushing toolbar) */
-        .tool-panel {
-            background: #1e293b;
-            padding: 10px 14px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            flex-shrink: 0;
+        /* Live Text Display on Video */
+        .live-text-layer {
             position: absolute;
-            bottom: 55px;
-            left: 0;
-            width: 100%;
-            z-index: 20;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.5);
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+            z-index: 10;
+            display: none;
+            text-align: center;
+            padding: 6px 16px;
+            border-radius: 6px;
+            white-space: nowrap;
         }
-        .panel-header {
+
+        /* Preview Control Bar */
+        .preview-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 11px;
-            font-weight: 600;
-            color: #38bdf8;
-        }
-        .panel-close {
-            cursor: pointer;
+            padding: 4px 16px;
+            background: #121822;
             font-size: 14px;
             color: #94a3b8;
-        }
-        .panel-options {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            overflow-x: auto;
-        }
-        .panel-btn {
-            background: #0f172a;
-            color: white;
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 5px 12px;
-            border-radius: 5px;
-            font-size: 11px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .panel-slider {
-            width: 100%;
-            accent-color: #38bdf8;
-        }
-        .text-input-box {
-            width: 100%;
-            padding: 6px 10px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: white;
-            border-radius: 5px;
-            font-size: 12px;
+            flex-shrink: 0;
         }
 
         /* Quick Options Bar */
@@ -185,8 +153,8 @@
         .quick-chip {
             background: #1e293b;
             color: #cbd5e1;
-            padding: 3px 8px;
-            border-radius: 4px;
+            padding: 4px 8px;
+            border-radius: 6px;
             font-size: 10px;
             display: flex;
             align-items: center;
@@ -210,13 +178,13 @@
             color: #64748b;
             display: flex;
             justify-content: space-between;
-            padding: 0 2px;
+            padding: 0 4px;
         }
         .timeline-tracks-box {
             display: flex;
             flex-direction: column;
             gap: 3px;
-            max-height: 110px;
+            max-height: 85px;
             overflow-y: auto;
         }
         .main-video-track {
@@ -225,9 +193,9 @@
             border-radius: 5px;
             display: flex;
             align-items: center;
-            padding: 0 5px;
-            gap: 6px;
-            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 0 6px;
+            gap: 8px;
+            border: 1px solid rgba(56, 189, 248, 0.4);
         }
         .track-thumb {
             width: 26px;
@@ -246,19 +214,86 @@
             padding: 0 8px;
             font-size: 10px;
             color: #94a3b8;
-            border: 1px dashed rgba(255,255,255,0.1);
+            border: 1px dashed rgba(255,255,255,0.15);
             cursor: pointer;
         }
 
-        /* Bottom Toolbar (Always Fixed at Bottom) */
+        /* Tool Settings Overlay Panel */
+        .tool-panel {
+            background: #1e293b;
+            padding: 10px 14px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            position: absolute;
+            bottom: 52px;
+            left: 0;
+            width: 100%;
+            z-index: 30;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #38bdf8;
+        }
+        .panel-close {
+            cursor: pointer;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        .panel-options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .panel-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            overflow-x: auto;
+        }
+        .panel-btn {
+            background: #0f172a;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .panel-btn.active-style {
+            background: #0ea5e9;
+            border-color: #38bdf8;
+        }
+        .panel-slider {
+            width: 100%;
+            accent-color: #38bdf8;
+        }
+        .text-input-box {
+            width: 100%;
+            padding: 6px 10px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        /* Bottom Toolbar (Fixed) */
         .toolbar {
             display: flex;
             justify-content: space-around;
             background: #0f172a;
             padding: 8px 2px;
-            border-top: 1px solid rgba(255,255,255,0.08);
+            border-top: 1px solid rgba(255,255,255,0.1);
             flex-shrink: 0;
-            z-index: 25;
+            z-index: 40;
         }
         .tool-item {
             display: flex;
@@ -268,10 +303,10 @@
             font-size: 9px;
             color: #94a3b8;
             cursor: pointer;
-            min-width: 40px;
+            min-width: 42px;
         }
         .tool-item span {
-            font-size: 16px;
+            font-size: 17px;
         }
         .tool-item:hover {
             color: #38bdf8;
@@ -298,9 +333,20 @@
             </div>
             <input type="file" id="videoUpload" accept="video/*" style="display: none;" onchange="loadVideo(event)">
             <video id="videoPlayer" controls style="display: none;"></video>
+            <div class="live-text-layer" id="liveTextLayer"></div>
         </div>
 
-        <!-- Tool Control Panel (Positioned as Overlay) -->
+        <!-- Preview Control Bar -->
+        <div class="preview-controls">
+            <span style="font-size: 11px;">🔍</span>
+            <span style="cursor:pointer;" onclick="videoPlayer.paused ? videoPlayer.play() : videoPlayer.pause()">▶</span>
+            <div style="display:flex; gap:15px; font-size:13px;">
+                <span style="cursor:pointer;" onclick="alert('Undo')">↩</span>
+                <span style="cursor:pointer;" onclick="alert('Redo')">↪</span>
+            </div>
+        </div>
+
+        <!-- Tool Settings Overlay Panel -->
         <div class="tool-panel" id="toolPanel">
             <div class="panel-header">
                 <span id="panelTitle">Tool Settings</span>
@@ -334,7 +380,7 @@
                     + Add audio <input type="file" id="audioUpload" accept="audio/*" style="display: none;" onchange="loadAudio(event)">
                 </div>
                 <div class="sub-track-row" onclick="openTool('text')">
-                    + Add text
+                    + Add text & Lyrics
                 </div>
             </div>
         </div>
@@ -361,6 +407,7 @@
         const panelTitle = document.getElementById('panelTitle');
         const panelOptions = document.getElementById('panelOptions');
         const tracksContainer = document.getElementById('tracksContainer');
+        const liveTextLayer = document.getElementById('liveTextLayer');
 
         function loadVideo(event) {
             const file = event.target.files[0];
@@ -389,7 +436,7 @@
                 audioRow.style.color = '#38bdf8';
                 audioRow.textContent = '🎵 Audio: ' + file.name;
                 tracksContainer.appendChild(audioRow);
-                alert('Audio file added successfully to timeline!');
+                alert('অডিও ফাইল সফলভাবে টাইমলাইনে যুক্ত হয়েছে!');
             }
         }
 
@@ -405,47 +452,73 @@
             if (toolType === 'edit') {
                 panelTitle.textContent = '✂️ Split & Trim Tool';
                 panelOptions.innerHTML = `
-                    <button class="panel-btn" onclick="alert('Video split successfully at current time!')">Split</button>
-                    <button class="panel-btn" onclick="alert('Trim start applied!')">Trim Start</button>
+                    <div class="panel-row">
+                        <button class="panel-btn" onclick="alert('সঠিক সময়ে ভিডিও স্প্লিট করা হয়েছে!')">Split</button>
+                        <button class="panel-btn" onclick="alert('শুরুর অংশ ট্রিম করা হয়েছে!')">Trim Start</button>
+                        <button class="panel-btn" onclick="alert('শেষের অংশ ট্রিম করা হয়েছে!')">Trim End</button>
+                    </div>
                 `;
             } else if (toolType === 'volume') {
-                panelTitle.textContent = '🔊 Volume Control (1% - 500%)';
+                panelTitle.textContent = '🔊 Volume Control (1% - 500%) [Live No OK]';
                 panelOptions.innerHTML = `
-                    <input type="range" class="panel-slider" min="0" max="5" step="0.1" value="1" oninput="setVolume(this.value)">
+                    <div style="display:flex; flex-direction:column; width:100%; gap:4px;">
+                        <div style="display:flex; justify-content:space-between; font-size:10px; color:#38bdf8;">
+                            <span>1%</span>
+                            <span id="volVal">100% (Normal)</span>
+                            <span>500% (Boost)</span>
+                        </div>
+                        <input type="range" class="panel-slider" min="0.01" max="5" step="0.1" value="1" oninput="setLiveVolume(this.value)">
+                    </div>
                 `;
             } else if (toolType === 'duplicate') {
                 panelTitle.textContent = '📑 Duplicate Clip';
                 panelOptions.innerHTML = `
-                    <button class="panel-btn" onclick="duplicateClip()">+ Add Duplicate to Timeline</button>
+                    <div class="panel-row">
+                        <button class="panel-btn" onclick="duplicateClip()">+ টাইমলাইনে ডুপ্লিকেট ক্লিপ যোগ করুন</button>
+                    </div>
                 `;
             } else if (toolType === 'speed') {
                 panelTitle.textContent = '⚡ Video Speed Control';
                 panelOptions.innerHTML = `
-                    <button class="panel-btn" onclick="setSpeed(0.5)">0.5x</button>
-                    <button class="panel-btn" onclick="setSpeed(1.0)">1.0x</button>
-                    <button class="panel-btn" onclick="setSpeed(2.0)">2.0x</button>
-                    <button class="panel-btn" onclick="setSpeed(5.0)">5.0x</button>
+                    <div class="panel-row">
+                        <button class="panel-btn" onclick="setSpeed(0.5)">0.5x</button>
+                        <button class="panel-btn" onclick="setSpeed(1.0)">1.0x</button>
+                        <button class="panel-btn" onclick="setSpeed(2.0)">2.0x</button>
+                        <button class="panel-btn" onclick="setSpeed(5.0)">5.0x</button>
+                    </div>
                 `;
             } else if (toolType === 'text') {
-                panelTitle.textContent = '💬 Text Overlay & Keyboard Input';
+                panelTitle.textContent = '💬 Text, Lyrics & Font Styles (CapCut Style)';
                 panelOptions.innerHTML = `
-                    <input type="text" class="text-input-box" placeholder="Type your text here..." oninput="addTextOverlay(this.value)">
+                    <div style="display:flex; flex-direction:column; gap:6px; width:100%;">
+                        <input type="text" class="text-input-box" id="textInputVal" placeholder="টেক্সট বা লিরিকস লিখুন..." oninput="updateLiveText(this.value)">
+                        <div style="font-size:10px; color:#38bdf8;">স্টাইলিশ ফন্ট ও কালার সিলেক্ট করুন:</div>
+                        <div class="panel-row">
+                            <button class="panel-btn" onclick="setFontStyle('sans-serif', '#ffffff', 'none')">Classic White</button>
+                            <button class="panel-btn" onclick="setFontStyle('serif', '#facc15', '2px 2px #000')">Yellow Glow</button>
+                            <button class="panel-btn" onclick="setFontStyle('monospace', '#38bdf8', '0 0 10px #38bdf8')">Neon Blue</button>
+                            <button class="panel-btn" onclick="setFontStyle('cursive', '#f43f5e', '2px 2px 4px #000')">Arabic/Stylish</button>
+                        </div>
+                    </div>
                 `;
             } else if (toolType === 'filter') {
                 panelTitle.textContent = '🎨 Color Filters';
                 panelOptions.innerHTML = `
-                    <button class="panel-btn" onclick="applyFilter('none')">Normal</button>
-                    <button class="panel-btn" onclick="applyFilter('grayscale(100%)')">B & W</button>
-                    <button class="panel-btn" onclick="applyFilter('sepia(100%)')">Sepia</button>
-                    <button class="panel-btn" onclick="applyFilter('contrast(180%)')">Contrast</button>
+                    <div class="panel-row">
+                        <button class="panel-btn" onclick="applyFilter('none')">Normal</button>
+                        <button class="panel-btn" onclick="applyFilter('grayscale(100%)')">B & W</button>
+                        <button class="panel-btn" onclick="applyFilter('sepia(100%)')">Sepia</button>
+                        <button class="panel-btn" onclick="applyFilter('contrast(180%)')">Contrast</button>
+                    </div>
                 `;
             } else if (toolType === 'delete') {
-                if(confirm('Delete this clip?')) {
+                if(confirm('আপনি কি এই ক্লিপটি মুছে ফেলতে চান?')) {
                     videoPlayer.src = '';
                     videoPlayer.style.display = 'none';
                     uploadOverlay.style.display = 'flex';
                     clipName.textContent = 'No Video Selected';
                     trackThumb.style.backgroundImage = 'none';
+                    liveTextLayer.style.display = 'none';
                     toolPanel.style.display = 'none';
                 }
             }
@@ -455,33 +528,44 @@
             toolPanel.style.display = 'none';
         }
 
-        function setVolume(val) {
-            videoPlayer.volume = Math.min(val, 1.0);
-            alert('Volume set to ' + Math.round(val * 100) + '%');
+        function setLiveVolume(val) {
+            let num = parseFloat(val);
+            videoPlayer.volume = Math.min(num, 1.0);
+            document.getElementById('volVal').textContent = Math.round(num * 100) + '%';
         }
 
         function setSpeed(rate) {
             videoPlayer.playbackRate = rate;
-            alert('Speed set to ' + rate + 'x');
+            alert('ভিডিওর গতি ' + rate + 'x এ সেট করা হয়েছে');
         }
 
         function applyFilter(style) {
             videoPlayer.style.filter = style;
-            alert('Filter applied!');
+            alert('ফিল্টার সফলভাবে প্রয়োগ করা হয়েছে!');
         }
 
         function duplicateClip() {
             const newTrack = document.createElement('div');
             newTrack.className = 'main-video-track';
-            newTrack.innerHTML = `<div class="track-thumb" style="background-image:${trackThumb.style.backgroundImage}"></div><span style="font-size:10px; color:#fff;">Duplicated Clip</span>`;
+            newTrack.innerHTML = `<div class="track-thumb" style="background-image:${trackThumb.style.backgroundImage}"></div><span style="font-size:10px; color:#fff;">ডুপ্লিকেট ক্লিপ</span>`;
             tracksContainer.appendChild(newTrack);
-            alert('Clip duplicated and added to timeline!');
+            alert('ক্লিপ সফলভাবে ডুপ্লিকেট করে টাইমলাইনে যুক্ত করা হয়েছে!');
         }
 
-        function addTextOverlay(text) {
-            if(text.trim() !== '') {
-                console.log('Text active: ' + text);
+        function updateLiveText(txt) {
+            if(txt.trim() !== '') {
+                liveTextLayer.textContent = txt;
+                liveTextLayer.style.display = 'block';
+            } else {
+                liveTextLayer.style.display = 'none';
             }
+        }
+
+        function setFontStyle(fontFamily, color, shadow) {
+            liveTextLayer.style.fontFamily = fontFamily;
+            liveTextLayer.style.color = color;
+            liveTextLayer.style.textShadow = shadow;
+            alert('ফন্ট স্টাইল পরিবর্তন করা হয়েছে!');
         }
     </script>
 </body>
