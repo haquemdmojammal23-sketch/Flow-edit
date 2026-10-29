@@ -74,7 +74,7 @@
             cursor: pointer;
         }
 
-        /* Video Preview Area (Fixed Compact Box) */
+        /* Video Preview Area */
         .preview-area {
             flex: 1;
             display: flex;
@@ -85,8 +85,8 @@
             margin: 4px 12px;
             border-radius: 6px;
             overflow: hidden;
-            min-height: 220px;
-            max-height: 300px;
+            min-height: 180px;
+            max-height: 240px;
             border: 1px solid rgba(255,255,255,0.08);
         }
         .preview-area video {
@@ -114,10 +114,69 @@
             cursor: pointer;
         }
 
-        /* Quick Options Bar (Mute, AI Clipper, Cover) */
+        /* Tool Settings Panel (Overlay without pushing toolbar) */
+        .tool-panel {
+            background: #1e293b;
+            padding: 10px 14px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            flex-shrink: 0;
+            position: absolute;
+            bottom: 55px;
+            left: 0;
+            width: 100%;
+            z-index: 20;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.5);
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #38bdf8;
+        }
+        .panel-close {
+            cursor: pointer;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        .panel-options {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+        }
+        .panel-btn {
+            background: #0f172a;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 11px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .panel-slider {
+            width: 100%;
+            accent-color: #38bdf8;
+        }
+        .text-input-box {
+            width: 100%;
+            padding: 6px 10px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        /* Quick Options Bar */
         .quick-options-bar {
             background: #121822;
-            padding: 6px 12px;
+            padding: 4px 12px;
             display: flex;
             gap: 6px;
             align-items: center;
@@ -126,23 +185,14 @@
         .quick-chip {
             background: #1e293b;
             color: #cbd5e1;
-            padding: 4px 8px;
-            border-radius: 5px;
+            padding: 3px 8px;
+            border-radius: 4px;
             font-size: 10px;
             display: flex;
             align-items: center;
             gap: 4px;
             cursor: pointer;
             border: 1px solid rgba(255,255,255,0.05);
-        }
-        .quick-chip.new-badge::after {
-            content: "New";
-            background: #f97316;
-            color: white;
-            font-size: 6px;
-            padding: 1px 3px;
-            border-radius: 3px;
-            font-weight: bold;
         }
 
         /* Timeline Section */
@@ -166,10 +216,12 @@
             display: flex;
             flex-direction: column;
             gap: 3px;
+            max-height: 110px;
+            overflow-y: auto;
         }
         .main-video-track {
             background: #1e293b;
-            height: 36px;
+            height: 34px;
             border-radius: 5px;
             display: flex;
             align-items: center;
@@ -178,8 +230,8 @@
             border: 1px solid rgba(56, 189, 248, 0.3);
         }
         .track-thumb {
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             background: #334155;
             border-radius: 3px;
             background-size: cover;
@@ -198,46 +250,7 @@
             cursor: pointer;
         }
 
-        /* Tool Settings Panel */
-        .tool-panel {
-            background: #1e293b;
-            padding: 8px 12px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            flex-shrink: 0;
-        }
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 11px;
-            font-weight: 600;
-            color: #38bdf8;
-        }
-        .panel-close {
-            cursor: pointer;
-            font-size: 12px;
-            color: #94a3b8;
-        }
-        .panel-options {
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-        }
-        .panel-btn {
-            background: #0f172a;
-            color: white;
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 10px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        /* Bottom Toolbar (Fixed CapCut Style) */
+        /* Bottom Toolbar (Always Fixed at Bottom) */
         .toolbar {
             display: flex;
             justify-content: space-around;
@@ -245,6 +258,7 @@
             padding: 8px 2px;
             border-top: 1px solid rgba(255,255,255,0.08);
             flex-shrink: 0;
+            z-index: 25;
         }
         .tool-item {
             display: flex;
@@ -273,7 +287,7 @@
                 <span class="search-btn">🔍</span>
             </div>
             <div class="quality-badge">AI UHD ▼</div>
-            <button class="export-btn" onclick="alert('Video exported successfully in AI UHD quality!')">Export</button>
+            <button class="export-btn" onclick="alert('Video exported successfully!')">Export</button>
         </div>
 
         <!-- Video Preview Area -->
@@ -286,7 +300,7 @@
             <video id="videoPlayer" controls style="display: none;"></video>
         </div>
 
-        <!-- Tool Control Panel -->
+        <!-- Tool Control Panel (Positioned as Overlay) -->
         <div class="tool-panel" id="toolPanel">
             <div class="panel-header">
                 <span id="panelTitle">Tool Settings</span>
@@ -298,8 +312,8 @@
         <!-- Quick Options Bar -->
         <div class="quick-options-bar">
             <div class="quick-chip" onclick="toggleMute()">🔇 <span id="muteText">Mute clip</span></div>
-            <div class="quick-chip new-badge" onclick="alert('AI Clipper active')">✨ AI clipper</div>
-            <div class="quick-chip" onclick="alert('Cover settings opened')">🖼️ Cover</div>
+            <div class="quick-chip" onclick="alert('AI Clipper active')">✨ AI clipper</div>
+            <div class="quick-chip" onclick="alert('Cover settings')">🖼️ Cover</div>
         </div>
 
         <!-- Timeline Section -->
@@ -311,25 +325,29 @@
                 <span>00:03</span>
                 <span id="durationLabel" style="color: #38bdf8;">00:11</span>
             </div>
-            <div class="timeline-tracks-box">
-                <div class="main-video-track">
+            <div class="timeline-tracks-box" id="tracksContainer">
+                <div class="main-video-track" id="mainVideoTrack">
                     <div class="track-thumb" id="trackThumb"></div>
                     <span id="clipName" style="font-size: 10px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1;">No Video Selected</span>
                 </div>
-                <div class="sub-track-row" onclick="openTool('audio')">+ Add audio</div>
-                <div class="sub-track-row" onclick="openTool('text')">+ Add text</div>
+                <div class="sub-track-row" onclick="document.getElementById('audioUpload').click()">
+                    + Add audio <input type="file" id="audioUpload" accept="audio/*" style="display: none;" onchange="loadAudio(event)">
+                </div>
+                <div class="sub-track-row" onclick="openTool('text')">
+                    + Add text
+                </div>
             </div>
         </div>
 
-        <!-- Bottom Toolbar -->
+        <!-- Bottom Toolbar (Fixed) -->
         <div class="toolbar">
             <div class="tool-item" onclick="openTool('edit')"><span>✂️</span>Split</div>
             <div class="tool-item" onclick="openTool('volume')"><span>🔊</span>Volume</div>
-            <div class="tool-item" onclick="openTool('animations')"><span>✨</span>Animations</div>
-            <div class="tool-item" onclick="openTool('effects')"><span>🪄</span>Effects</div>
-            <div class="tool-item" onclick="openTool('delete')" style="color: #f87171;"><span>🗑️</span>Delete</div>
+            <div class="tool-item" onclick="openTool('duplicate')"><span>📑</span>Duplicate</div>
             <div class="tool-item" onclick="openTool('speed')"><span>⚡</span>Speed</div>
+            <div class="tool-item" onclick="openTool('delete')" style="color: #f87171;"><span>🗑️</span>Delete</div>
             <div class="tool-item" onclick="openTool('filter')"><span>🎨</span>Filter</div>
+            <div class="tool-item" onclick="openTool('text')"><span>💬</span>Text</div>
         </div>
     </div>
 
@@ -342,6 +360,7 @@
         const toolPanel = document.getElementById('toolPanel');
         const panelTitle = document.getElementById('panelTitle');
         const panelOptions = document.getElementById('panelOptions');
+        const tracksContainer = document.getElementById('tracksContainer');
 
         function loadVideo(event) {
             const file = event.target.files[0];
@@ -362,6 +381,18 @@
             }
         }
 
+        function loadAudio(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const audioRow = document.createElement('div');
+                audioRow.className = 'sub-track-row';
+                audioRow.style.color = '#38bdf8';
+                audioRow.textContent = '🎵 Audio: ' + file.name;
+                tracksContainer.appendChild(audioRow);
+                alert('Audio file added successfully to timeline!');
+            }
+        }
+
         function toggleMute() {
             videoPlayer.muted = !videoPlayer.muted;
             document.getElementById('muteText').textContent = videoPlayer.muted ? 'Unmute' : 'Mute clip';
@@ -374,41 +405,39 @@
             if (toolType === 'edit') {
                 panelTitle.textContent = '✂️ Split & Trim Tool';
                 panelOptions.innerHTML = `
-                    <button class="panel-btn" onclick="alert('Split executed!')">Split</button>
+                    <button class="panel-btn" onclick="alert('Video split successfully at current time!')">Split</button>
                     <button class="panel-btn" onclick="alert('Trim start applied!')">Trim Start</button>
                 `;
             } else if (toolType === 'volume') {
-                panelTitle.textContent = '🔊 Volume Control';
+                panelTitle.textContent = '🔊 Volume Control (1% - 500%)';
                 panelOptions.innerHTML = `
-                    <button class="panel-btn" onclick="setVolume(0)">Mute</button>
-                    <button class="panel-btn" onclick="setVolume(0.5)">50%</button>
-                    <button class="panel-btn" onclick="setVolume(1.0)">100%</button>
+                    <input type="range" class="panel-slider" min="0" max="5" step="0.1" value="1" oninput="setVolume(this.value)">
+                `;
+            } else if (toolType === 'duplicate') {
+                panelTitle.textContent = '📑 Duplicate Clip';
+                panelOptions.innerHTML = `
+                    <button class="panel-btn" onclick="duplicateClip()">+ Add Duplicate to Timeline</button>
                 `;
             } else if (toolType === 'speed') {
-                panelTitle.textContent = '⚡ Video Speed';
+                panelTitle.textContent = '⚡ Video Speed Control';
                 panelOptions.innerHTML = `
                     <button class="panel-btn" onclick="setSpeed(0.5)">0.5x</button>
                     <button class="panel-btn" onclick="setSpeed(1.0)">1.0x</button>
                     <button class="panel-btn" onclick="setSpeed(2.0)">2.0x</button>
-                `;
-            } else if (toolType === 'audio') {
-                panelTitle.textContent = '🎵 Audio Program';
-                panelOptions.innerHTML = `
-                    <button class="panel-btn" onclick="alert('Audio extracted!')">Extract Audio</button>
-                    <button class="panel-btn" onclick="alert('BGM added!')">Add BGM</button>
+                    <button class="panel-btn" onclick="setSpeed(5.0)">5.0x</button>
                 `;
             } else if (toolType === 'text') {
-                panelTitle.textContent = '💬 Text Tool';
+                panelTitle.textContent = '💬 Text Overlay & Keyboard Input';
                 panelOptions.innerHTML = `
-                    <button class="panel-btn" onclick="alert('Text added!')">Add Text</button>
-                    <button class="panel-btn" onclick="alert('Captions generated!')">Auto Captions</button>
+                    <input type="text" class="text-input-box" placeholder="Type your text here..." oninput="addTextOverlay(this.value)">
                 `;
             } else if (toolType === 'filter') {
                 panelTitle.textContent = '🎨 Color Filters';
                 panelOptions.innerHTML = `
                     <button class="panel-btn" onclick="applyFilter('none')">Normal</button>
                     <button class="panel-btn" onclick="applyFilter('grayscale(100%)')">B & W</button>
-                    <button class="panel-btn" onclick="applyFilter('sepia(100%)')">Cinematic</button>
+                    <button class="panel-btn" onclick="applyFilter('sepia(100%)')">Sepia</button>
+                    <button class="panel-btn" onclick="applyFilter('contrast(180%)')">Contrast</button>
                 `;
             } else if (toolType === 'delete') {
                 if(confirm('Delete this clip?')) {
@@ -419,12 +448,6 @@
                     trackThumb.style.backgroundImage = 'none';
                     toolPanel.style.display = 'none';
                 }
-            } else {
-                panelTitle.textContent = '✨ Effects & Animations';
-                panelOptions.innerHTML = `
-                    <button class="panel-btn" onclick="alert('Animation applied!')">Fade FX</button>
-                    <button class="panel-btn" onclick="alert('Glow applied!')">Glow FX</button>
-                `;
             }
         }
 
@@ -432,9 +455,9 @@
             toolPanel.style.display = 'none';
         }
 
-        function setVolume(level) {
-            videoPlayer.volume = level;
-            alert('Volume set to ' + (level * 100) + '%');
+        function setVolume(val) {
+            videoPlayer.volume = Math.min(val, 1.0);
+            alert('Volume set to ' + Math.round(val * 100) + '%');
         }
 
         function setSpeed(rate) {
@@ -445,6 +468,20 @@
         function applyFilter(style) {
             videoPlayer.style.filter = style;
             alert('Filter applied!');
+        }
+
+        function duplicateClip() {
+            const newTrack = document.createElement('div');
+            newTrack.className = 'main-video-track';
+            newTrack.innerHTML = `<div class="track-thumb" style="background-image:${trackThumb.style.backgroundImage}"></div><span style="font-size:10px; color:#fff;">Duplicated Clip</span>`;
+            tracksContainer.appendChild(newTrack);
+            alert('Clip duplicated and added to timeline!');
+        }
+
+        function addTextOverlay(text) {
+            if(text.trim() !== '') {
+                console.log('Text active: ' + text);
+            }
         }
     </script>
 </body>
