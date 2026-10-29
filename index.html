@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowEdit - Smart Video & Photo Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .phone-container {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            max-height: 844px;
+            background-color: #f8fafc;
+            color: #0f172a;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        /* App Header */
+        .header {
+            padding: 20px 20px 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .logo-icon {
+            background: linear-gradient(135deg, #ef4444, #3b82f6);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        /* Section Title */
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #64748b;
+            margin: 15px 20px 8px 20px;
+            letter-spacing: 0.5px;
+        }
+        /* New Creation Cards */
+        .creation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 0 20px;
+        }
+        .create-card {
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .video-card {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+        }
+        .photo-card {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+        .create-card h3 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        /* Mini Timeline Graphic inside Video Card */
+        .mini-timeline {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 10px;
+        }
+        .mini-track {
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+            gap: 2px;
+        }
+        .mini-wave {
+            height: 3px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 2px;
+            opacity: 0.8;
+        }
+        /* Recent Projects Section */
+        .recent-section {
+            padding: 0 20px;
+            margin-top: 20px;
+        }
+        .project-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+        .project-preview {
+            display: flex;
+            gap: 8px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #cbd5e1;
+            margin-bottom: 8px;
+            position: relative;
+        }
+        .preview-img {
+            flex: 1;
+            background-size: cover;
+            background-position: center;
+        }
+        /* Detailed Audio Waveform Track */
+        .audio-waveform-track {
+            background: #1e293b;
+            border-radius: 6px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2px;
+            height: 36px;
+        }
+        .wave-line {
+            width: 3px;
+            background: #38bdf8;
+            border-radius: 2px;
+            animation: pulseWave 1.5s infinite ease-in-out;
+        }
+        @keyframes pulseWave {
+            0%, 100% { height: 8px; }
+            50% { height: 24px; }
+        }
+        /* AI Quick Tools */
+        .ai-tools-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 0 20px;
+            margin-top: 10px;
+        }
+        .ai-tool-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px 4px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 500;
+            color: #475569;
+        }
+        .ai-tool-icon {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        /* Bottom Navigation */
+        .bottom-nav {
+            margin-top: auto;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: #64748b;
+            gap: 4px;
+            font-weight: 600;
+        }
+        .nav-item.active {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">F</div>
+                FlowEdit
+            </div>
+        </div>
+
+        <!-- New Creation -->
+        <div class="section-title">NEW CREATION</div>
+        <div class="creation-grid">
+            <div class="create-card video-card">
+                <h3>NEW VIDEO PROJECT</h3>
+                <div class="mini-timeline">
+                    <div class="mini-track" style="background: #dc2626;">
+                        <div class="mini-wave" style="background: #fca5a5;"></div>
+                    </div>
+                    <div class="mini-track">
+                        <div class="mini-wave"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="create-card photo-card">
+                <h3>NEW PHOTO PROJECT</h3>
+                <div style="font-size: 11px; opacity: 0.9; margin-top: 20px;">AI Enhancer & Filters</div>
+            </div>
+        </div>
+
+        <!-- Recent Projects -->
+        <div class="section-title">RECENT PROJECTS</div>
+        <div class="recent-section">
+            <div class="project-card">
+                <div class="project-header">
+                    <span>DHAKA VLOG - DRAFT 1</span>
+                    <span style="color: #94a3b8; font-size: 10px;">Oct 15, 1:40 AM</span>
+                </div>
+                <div class="project-preview">
+                    <div class="preview-img" style="background-image: url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=300');"></div>
+                    <div class="preview-img" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300');"></div>
+                </div>
+                <!-- Audio Waveform Track -->
+                <div class="audio-waveform-track">
+                    <div class="wave-line" style="height: 10px; animation-delay: 0.1s;"></div>
+                    <div class="wave-line" style="height: 22px; animation-delay: 0.3s;"></div>
+                    <div class="wave-line" style="height: 14px; animation-delay: 0.2s;"></div>
+                    <div class="wave-line" style="height: 26px; animation-delay: 0.4s;"></div>
+                    <div class="wave-line" style="height: 18px; animation-delay: 0.1s;"></div>
+                    <div class="wave-line" style="height: 12px; animation-delay: 0.5s;"></div>
+                    <div class="wave-line" style="height: 24px; animation-delay: 0.2s;"></div>
+                    <div class="wave-line" style="height: 16px; animation-delay: 0.3s;"></div>
+                    <div class="wave-line" style="height: 20px; animation-delay: 0.4s;"></div>
+                    <div class="wave-line" style="height: 28px; animation-delay: 0.1s;"></div>
+                    <div class="wave-line" style="height: 15px; animation-delay: 0.3s;"></div>
+                    <div class="wave-line" style="height: 22px; animation-delay: 0.2s;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Quick Tools -->
+        <div class="section-title">AI QUICK TOOLS</div>
+        <div class="ai-tools-grid">
+            <div class="ai-tool-item">
+                <div class="ai-tool-icon">✂️</div>
+                BG Remove
+            </div>
+            <div class="ai-tool-item">
+                <div class="ai-tool-icon">💬</div>
+                Auto Captions
+            </div>
+            <div class="ai-tool-item">
+                <div class="ai-tool-icon">🔊</div>
+                Audio Enhance
+            </div>
+            <div class="ai-tool-item">
+                <div class="ai-tool-icon">✨</div>
+                Text to Speech
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <span>🏠</span>
+                HOME
+            </div>
+            <div class="nav-item">
+                <span>⚡</span>
+                EDITOR
+            </div>
+            <div class="nav-item">
+                <span>📁</span>
+                ASSETS
+            </div>
+            <div class="nav-item">
+                <span>👤</span>
+                PROFILE
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
