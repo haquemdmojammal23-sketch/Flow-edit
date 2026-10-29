@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowEdit - Pro Video & Photo Editor Studio</title>
+    <title>FlowEdit - Pro Video & Photo Editor</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
         body {
             background-color: #0f172a;
@@ -24,232 +24,190 @@
             max-width: 400px;
             height: 100vh;
             max-height: 844px;
-            background-color: #000000;
-            color: #ffffff;
+            background-color: #1e293b;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
-        /* Top Navigation bar */
-        .editor-top-nav {
+        .top-nav {
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            background: #121212;
-            border-bottom: 1px solid #222;
+            background: #1e293b;
+            z-index: 10;
         }
-        .back-btn, .export-btn {
-            background: none;
-            border: none;
-            color: #ffffff;
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .preview-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: #000;
+            overflow: hidden;
+        }
+        .preview-area video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .upload-overlay {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            z-index: 5;
+        }
+        .upload-btn-label {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
         }
-        .export-btn {
-            background: #ef4444;
-            padding: 6px 14px;
-            border-radius: 20px;
-        }
-        .project-title-top {
-            font-size: 14px;
-            font-weight: 500;
-            color: #cbd5e1;
-        }
-        /* Video Preview Screen */
-        .preview-screen {
-            flex: 1;
-            background: #1a1a1a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .video-player-mock {
-            width: 90%;
-            height: 80%;
-            background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600') center/cover;
-            border-radius: 12px;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .play-overlay-btn {
-            width: 50px;
-            height: 50px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.8);
-        }
-        /* Timeline and Audio Waveform Section */
-        .timeline-section {
-            background: #121212;
-            padding: 15px;
-            border-top: 1px solid #222;
-        }
-        .timeline-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 12px;
-            color: #94a3b8;
-        }
-        .timeline-tracks-box {
-            background: #1e1e1e;
-            border-radius: 8px;
-            padding: 8px;
+        .timeline-area {
+            background: #111827;
+            padding: 15px 20px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            position: relative;
+            gap: 10px;
         }
-        .track-row {
-            height: 28px;
-            background: #2a2a2a;
-            border-radius: 4px;
+        .time-info {
+            font-size: 12px;
+            color: #94a3b8;
+            display: flex;
+            justify-content: space-between;
+        }
+        .track {
+            background: #1f2937;
+            padding: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
-            padding: 0 8px;
+            gap: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .clip-box {
+            background: #3b82f6;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+        .waveform {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
             position: relative;
             overflow: hidden;
         }
-        .video-clip-block {
-            background: #3b82f6;
-            height: 20px;
-            border-radius: 3px;
+        .waveform-inner {
             width: 70%;
-            display: flex;
-            align-items: center;
-            padding-left: 6px;
-            font-size: 10px;
-            font-weight: 600;
-        }
-        .audio-clip-block {
-            background: #06b6d4;
-            height: 20px;
+            height: 100%;
+            background: #38bdf8;
             border-radius: 3px;
-            width: 85%;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0 4px;
         }
-        .tiny-wave {
-            width: 2px;
-            height: 12px;
-            background: white;
-            border-radius: 1px;
-        }
-        /* Editing Tools Toolbar */
-        .editing-toolbar {
-            background: #18181b;
+        .toolbar {
             display: flex;
             justify-content: space-around;
-            padding: 12px 0;
-            border-top: 1px solid #27272a;
+            background: #0f172a;
+            padding: 15px 10px;
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
-        .tool-icon-btn {
+        .tool-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            background: none;
-            border: none;
-            color: #a1a1aa;
-            font-size: 10px;
+            font-size: 11px;
+            color: #94a3b8;
             cursor: pointer;
         }
-        .tool-icon-btn span:first-child {
-            font-size: 18px;
-        }
-        .tool-icon-btn.active {
-            color: #ef4444;
+        .tool-item span {
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-
     <div class="editor-container">
         <!-- Top Navigation -->
-        <div class="editor-top-nav">
-            <button class="back-btn" onclick="window.location.href='index.html'">✕</button>
-            <div class="project-title-top">Dhaka Vlog.mp4</div>
-            <button class="export-btn">Export</button>
+        <div class="top-nav">
+            <a href="index.html" class="back-btn">← Back</a>
+            <div style="font-weight: 600; font-size: 15px;">FlowEdit Studio</div>
+            <div style="font-size: 13px; color: #38bdf8; cursor: pointer;" onclick="document.getElementById('videoUpload').click()">Upload</div>
         </div>
 
-        <!-- Video Preview -->
-        <div class="preview-screen">
-            <div class="video-player-mock">
-                <div class="play-overlay-btn">▶</div>
+        <!-- Video Preview Area -->
+        <div class="preview-area">
+            <div class="upload-overlay" id="uploadOverlay">
+                <label for="videoUpload" class="upload-btn-label">📁 Select Video from Gallery</label>
+                <div style="font-size: 12px; color: #94a3b8;">Choose MP4, MOV or WebM file</div>
             </div>
+            <input type="file" id="videoUpload" accept="video/*" style="display: none;" onchange="loadVideo(event)">
+            <video id="videoPlayer" controls style="display: none;"></video>
         </div>
 
-        <!-- Timeline & Waveform Section -->
-        <div class="timeline-section">
-            <div class="timeline-controls">
-                <span>00:04 / 02:30</span>
-                <span>⚡ Multi-Track Timeline</span>
+        <!-- Timeline Area -->
+        <div class="timeline-area">
+            <div class="time-info">
+                <span id="currentTime">00:00 / 00:00</span>
+                <span style="color: #38bdf8;">⚡ Multi-Track Timeline</span>
             </div>
-            <div class="timeline-tracks-box">
-                <!-- Video Track -->
-                <div class="track-row">
-                    <div class="video-clip-block">🎬 Clip_01.mp4</div>
-                </div>
-                <!-- Audio Waveform Track -->
-                <div class="track-row">
-                    <div class="audio-clip-block">
-                        <div class="tiny-wave"></div>
-                        <div class="tiny-wave" style="height: 16px;"></div>
-                        <div class="tiny-wave" style="height: 8px;"></div>
-                        <div class="tiny-wave" style="height: 14px;"></div>
-                        <div class="tiny-wave" style="height: 18px;"></div>
-                        <div class="tiny-wave" style="height: 10px;"></div>
-                        <div class="tiny-wave" style="height: 15px;"></div>
-                        <div class="tiny-wave" style="height: 6px;"></div>
-                    </div>
+            <div class="track">
+                <div class="clip-box" id="clipName">No Video Selected</div>
+                <div class="waveform">
+                    <div class="waveform-inner"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Editing Toolbar -->
-        <div class="editing-toolbar">
-            <button class="tool-icon-btn active">
-                <span>✂️</span>
-                <span>Split</span>
-            </button>
-            <button class="tool-icon-btn">
-                <span>⚡</span>
-                <span>Speed</span>
-            </button>
-            <button class="tool-icon-btn">
-                <span>🎨</span>
-                <span>Filters</span>
-            </button>
-            <button class="tool-icon-btn">
-                <span>💬</span>
-                <span>Text</span>
-            </button>
-            <button class="tool-icon-btn">
-                <span>🎵</span>
-                <span>Audio</span>
-            </button>
-            <button class="tool-icon-btn">
-                <span>✨</span>
-                <span>AI Tools</span>
-            </button>
+        <!-- Bottom Toolbar -->
+        <div class="toolbar">
+            <div class="tool-item"><span>✂️</span>Split</div>
+            <div class="tool-item"><span>⚡</span>Speed</div>
+            <div class="tool-item"><span>🎨</span>Filters</div>
+            <div class="tool-item"><span>💬</span>Text</div>
+            <div class="tool-item"><span>🎵</span>Audio</div>
+            <div class="tool-item"><span>✨</span>AI Tools</div>
         </div>
     </div>
 
+    <script>
+        function loadVideo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const videoPlayer = document.getElementById('videoPlayer');
+                const uploadOverlay = document.getElementById('uploadOverlay');
+                const clipName = document.getElementById('clipName');
+
+                const videoURL = URL.createObjectURL(file);
+                videoPlayer.src = videoURL;
+                videoPlayer.style.display = 'block';
+                uploadOverlay.style.display = 'none';
+                clipName.textContent = file.name;
+
+                videoPlayer.play();
+            }
+        }
+    </script>
 </body>
 </html>
